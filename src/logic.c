@@ -13,7 +13,7 @@
 #define CELL_MV_MAX 3650.0F
 #define PACK_TEMP_C_MAX 60.0F 
 // max temp given was 60
-#define VOLTAGE_CURRENT_FAULT?_PERSIST_MS 500u 
+#define VOLTAGE_CURRENT_FAULT_PERSIST_MS 500u 
 //8.7 -> AMS must trip if a critical volt/curent goes be;llow 500ms
 #define TEMP_FAULT_PERSIST_MS 1000u
 #define PACK_CURRENT_A_MAX 100.0F
@@ -30,8 +30,8 @@ static bool bms_fault(const BmsData *bms, uint32_t now_ms) {
     return true;
     }
   for (int i = 0; i < BMS_NUM_CELLS; i++) {
-    if (bms->cell_voltage_mv[i] < CELL_MV_MIN ||
-      bms->cell_voltage_mv[i] > CELL_MV_MAX) {
+    if (bms->cell_voltages_mv[i] < CELL_MV_MIN ||
+      bms->cell_voltages_mv[i] > CELL_MV_MAX) {
       return true;
       }
   }
