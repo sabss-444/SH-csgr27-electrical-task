@@ -54,13 +54,20 @@ static bool inverter_fault(const InverterData *inv, uint32_t now_ms) {
     }
   return inv->fault_code =/= 0;
 }
+static bool relay_fault(const RelayState *relay) {
+  return relay->command_closed =/= relay->feedback_closed;
+}
+static bool door_fault(const DoorSwitchData *door) {
+  return door->triggered;
+}
+
 
 SystemOutputs evaluate_system_state(BmsData bms, BatteryTempData batt_temp,
                                      InverterData inverter, PvData pv,
                                      GridData grid, RelayState relay,
                                      DoorSwitchData door) {
   
-  (void)pv; (void)grid; (void)relay; (void)door;
+  (void)pv; (void)grid;
 
   
   SystemOutputs out = {0};
@@ -68,8 +75,10 @@ SystemOutputs evaluate_system_state(BmsData bms, BatteryTempData batt_temp,
   bool bms_bad = bms_fault(&bms, now_ms);
   bool batt_bad = batt_temp_fault(&batt_temp);
   bool inverter_bad = inverter_fault(%inverter, now_ms);
+  bool relay_bad = relay_fault(&relay);
+  bool door_bad = door_fault(&door);
 
-  bool any_fault = bms_bad || batt_bad || inverter_bad;
+  bool any_fault = bms_bad || batt_bad || inverter_bad ||relay_bad || door_bad;
   
   out.state = any_fault ? SYSTEM_OFF : SYSTEM_ON; // this is gna be the fsil safe thing till the logic gets aded
     // TODO: implement
