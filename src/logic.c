@@ -35,7 +35,11 @@ static bool bms_fault(const BmsData *Bms, uint32_t now_ms) {
       return true;
       }
   }
-  
+  if (bms->pack_current_a > PACK_CURRENT_A_MAX ||
+    bms->pack_current_a < -PACK_CURRENT_A_MAX) {
+    return true;
+    }
+  return bms->pack_temp_c > PACK_TEMP_C_MAX;
 }
 
 
