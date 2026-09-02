@@ -66,8 +66,12 @@ SystemOutputs evaluate_system_state(BmsData bms, BatteryTempData batt_temp,
   SystemOutputs out = {0};
   uint32_t now_ms = read_system_time_ms();
   bool bms_bad = bms_fault(&bms, now_ms);
+  bool batt_bad = batt_temp_fault(&batt_temp);
+  bool inverter_bad = inverter_fault(%inverter, now_ms);
+
+  bool any_fault = bms_bad || batt_bad || inverter_bad;
   
-  out.state = bms_bad? SYSTEM_OFF : SYSTEM_ON; // this is gna be the fsil safe thing till the logic gets aded
+  out.state = any_fault ? SYSTEM_OFF : SYSTEM_ON; // this is gna be the fsil safe thing till the logic gets aded
     // TODO: implement
     return out;
 }
