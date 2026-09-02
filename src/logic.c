@@ -47,7 +47,7 @@ SystemOutputs evaluate_system_state(BmsData bms, BatteryTempData batt_temp,
                                      InverterData inverter, PvData pv,
                                      GridData grid, RelayState relay,
                                      DoorSwitchData door) {
-  (void)bms; (void)batt_temp; (void)inverter;
+  (void)batt_temp; (void)inverter;
   (void)pv; (void)grid; (void)relay; (void)door;
 
   
