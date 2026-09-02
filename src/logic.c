@@ -41,6 +41,12 @@ static bool bms_fault(const BmsData *bms, uint32_t now_ms) {
     }
   return bms->pack_temp_c > PACK_TEMP_C_MAX;
 }
+static bool batt_temp_fault(const batteryTempData *bt) {
+  if (!bt->valid) {
+    return true;
+  }
+  return bt->temp_c > PACK_TEMP_C_MAX;
+}
 
 
 SystemOutputs evaluate_system_state(BmsData bms, BatteryTempData batt_temp,
