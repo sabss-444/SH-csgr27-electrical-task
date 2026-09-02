@@ -41,19 +41,25 @@ static bool bms_fault(const BmsData *bms, uint32_t now_ms) {
     }
   return bms->pack_temp_c > PACK_TEMP_C_MAX;
 }
-static bool batt_temp_fault(const batteryTempData *bt) {
+static bool batt_temp_fault(const BatteryTempData *bt) {
   if (!bt->valid) {
     return true;
   }
   return bt->temp_c > PACK_TEMP_C_MAX;
 }
-
+static bool inverter_fault(const InverterData *inv, uint32_t now_ms) {
+  if (!inv->comms_ok ||
+    is_stale(inv->last_update_ms, now_ms, VOLTAGE_CURRENT_FAULT_PERSIST_MS)) {
+    return true;
+    }
+  return inv->fault_code =/= 0;
+}
 
 SystemOutputs evaluate_system_state(BmsData bms, BatteryTempData batt_temp,
                                      InverterData inverter, PvData pv,
                                      GridData grid, RelayState relay,
                                      DoorSwitchData door) {
-  (void)batt_temp; (void)inverter;
+  
   (void)pv; (void)grid; (void)relay; (void)door;
 
   
