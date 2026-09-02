@@ -24,14 +24,14 @@ static bool is_stale(uint32_t last_update_ms, uint32_t now_ms, uint32_t window_m
   }
   return (now_ms - last_update_ms) > window_ms;
 }
-static bool bms_fault(const BmsData *Bms, uint32_t now_ms) {
+static bool bms_fault(const BmsData *bms, uint32_t now_ms) {
   if (!bms->comms_ok ||
     is_stale(bms->last_update_ms, now_ms, VOLTAGE_CURRENT_FAULT_PERSIST_MS)) {
     return true;
     }
   for (int i = 0; i < BMS_NUM_CELLS; i++) {
-    if (bms->cell_voltage_mv[i] > CELL_MV_MIN ||
-      bms->cell_voltage_mv[i] < CELL_MV_MAX) {
+    if (bms->cell_voltage_mv[i] < CELL_MV_MIN ||
+      bms->cell_voltage_mv[i] > CELL_MV_MAX) {
       return true;
       }
   }
